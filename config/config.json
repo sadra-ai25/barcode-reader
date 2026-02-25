@@ -1,0 +1,28 @@
+{
+    "cameras": {
+        "camera1": {
+            "rtsp": "rtsp://A:Aa.123456@172.16.16.29:554/cam/realmonitor?channel=1&subtype=0",
+            "bbox":  {
+                "x_min": 400,
+                "y_min": 208,
+                "x_max": 603,
+                "y_max": 516
+            }
+        },
+        "camera2": {
+            "rtsp": "rtsp://A:Aa.123456@172.16.16.28:554/cam/realmonitor?channel=1&subtype=0",
+            "bbox": {
+                "x_min": 1345,
+                "y_min": 326,
+                "x_max": 1559,
+                "y_max": 631
+            }
+        }
+    },
+    "default_bbox": {
+        "x_min": 400,
+        "y_min": 208,
+        "x_max": 603,
+        "y_max": 516
+    }
+}

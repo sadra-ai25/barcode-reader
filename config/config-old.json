@@ -1,0 +1,28 @@
+{
+    "cameras": {
+        "camera1": {
+            "rtsp": "rtsp://admin:$adraPASS@192.168.50.150",
+            "bbox": {
+                "x_min": 1019,
+                "y_min": 338,
+                "x_max": 1273,
+                "y_max": 471
+            }
+        },
+        "camera2": {
+            "rtsp": "rtsp://admin:$adraPASS@192.168.50.150",
+            "bbox": {
+                "x_min": 1019,
+                "y_min": 338,
+                "x_max": 1273,
+                "y_max": 471
+            }
+        }
+    },
+    "default_bbox": {
+        "x_min": 898,
+        "y_min": 353,
+        "x_max": 1075,
+        "y_max": 467
+    }
+}

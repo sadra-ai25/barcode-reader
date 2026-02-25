@@ -1,0 +1,32 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.venv/
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Docker
+*.tar
+docker-compose.override.yml
+
+# Temporary / large files
+uploads/*
+weights/*/*.pdiparams
+weights/*/*.pdmodel
+weights/*/*.pdiparams.info
+
+# Editor / OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/
+.idea/
+
+# Logs
+*.log

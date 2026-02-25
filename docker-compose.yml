@@ -1,0 +1,34 @@
+version: '3'
+services:
+  barcode:
+    build: .
+    image: barcode
+    ports:
+      - "5003:5003"
+    volumes:
+      - ./config:/app/config
+      - ./uploads:/app/uploads
+      - ./weights:/app/weights
+      - ./services:/app/services
+      - ./logs:/app/logs
+      - ./cropped_images:/app/cropped_images
+      - ./database:/app/database  # Added for local SQLite database persistence
+    depends_on:
+      - rabbitmq
+    env_file: .env
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5673:5673"
+      - "15673:15673"
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+      # - RABBITMQ_DEFAULT_VHOST:/
+      # - RABBITMQ_HA_POLICY:all
+      # - RABBITMQ_FRAME_QUEUE_MAX_LENGTH:1000
+      # - RABBITMQ_FRAME_QUEUE_TTL:60000
+    # volumes:
+    #   - ./rabbitmq_data:/var/lib/rabbitmq
+    restart: always
