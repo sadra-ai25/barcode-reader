@@ -1,6 +1,6 @@
 # Barcode Reader System
 
-![Python](https://img.shields.io/badge/Python-3.10-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-green) ![PaddleOCR](https://img.shields.io/badge/PaddleOCR-2.x-orange) ![Docker](https://img.shields.io/badge/Docker-Compose-blue) ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-orange)
+![Python](https://img.shields.io/badge/Python-3.10-blue) ![FastAPI](https://img.shields.io/badge/FastAPI-green) ![PaddleOCR](https://img.shields.io/badge/PaddleOCR-PP--OCRv4-orange) ![Docker](https://img.shields.io/badge/Docker-Compose-blue) ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3-orange)
 
 Real-time barcode reading system for industrial use. Reads 8-digit barcodes from IP camera streams using PaddleOCR, deduplicates results, and logs to SQL Server — designed for steel production tracking.
 
@@ -18,7 +18,7 @@ Real-time barcode reading system for industrial use. Reads 8-digit barcodes from
 
 | Component | Technology |
 |---|---|
-| OCR Engine | PaddleOCR (EN PP-OCRv4) |
+| OCR Engine | PaddleOCR — `en_PP-OCRv3_det` + `en_PP-OCRv4_rec` |
 | API Server | FastAPI + Uvicorn |
 | Message Queue | RabbitMQ |
 | Database | Microsoft SQL Server (pyodbc) |
@@ -40,9 +40,10 @@ IP Camera (RTSP)
       │
       ▼
  Frame Consumer (Process)
-   - Crops frame to ROI bbox
-   - Runs PaddleOCR
-   - Extracts 8-digit barcode via regex
+   - Resizes frame 50% (INTER_AREA)
+   - Crops to ROI bbox
+   - Runs PaddleOCR (det + rec + cls)
+   - Extracts 8-digit barcode via regex `\d{8}`
    - Deduplication check
       │
       ▼
@@ -143,67 +144,26 @@ docker compose up -d
 
 Pull requests are welcome. For major changes, please open an issue first.
 
+## Auto-restart
+
+A `restart-service.sh` script is included for production use. It installs a systemd timer that restarts the service every 30 minutes:
+
+```bash
+sudo chmod +x restart-service.sh
+sudo ./restart-service.sh
+```
+
+To disable:
+
+```bash
+sudo systemctl disable --now restart-barcode-service.timer
+sudo systemctl daemon-reload
+```
+
+## Contributing
+
+Pull requests are welcome. For major changes, please open an issue first.
+
 ## License
 
 MIT
-- sudo docker copmpose up -d
-
-# if you need send a request, rename "services-with-request" to "services" and the alreeady services should rename to "services-old"
-# then send a request in terminal for any requirements
-- start camera:
-            curl -X POST "http://localhost:5004/start_cameras"
-
-- stop camera:
-            curl -X POST "http://localhost:5004/stop_cameras"
-
-- upload a video file:
-            curl -X POST "http://localhost:5004/upload_video" \
-                  -F "video=@/path/to/your/video.mp4"
-
-------------------------------------------------------------------------------------
-
-# 'restart-service.sh' restarts service every 30 minutes (30 minutes is changable)
-for enabling you should run:
-      - sudo chmod +x restart-service.sh
-      - sudo ./restart-service.sh
-
-for disabling you should run:
-      - sudo systemctl disable --now restart-barcode-service.timer
-      - sudo rm /etc/systemd/system/restart-barcode-service.timer
-      - sudo rm /etc/systemd/system/restart-barcode-service.service
-      - sudo systemctl daemon-reload
-      - sudo systemctl reset-failed
-
-------------------------------------------------------------------------------------
-# if you find the .env file please uncomment the items:
-      - Abhar databse:
-            # SQL_DRIVER={ODBC Driver 17 for SQL Server}
-            # DB_SERVER=192.168.1.11\sqlsadra
-            # DB_NAME=DBSadraafzar001
-            # USERNAME=AI
-            # PASSWORD=S@dra123
-            
-      - local databse:
-            # SQL_DRIVER={ODBC Driver 17 for SQL Server}
-            # DB_SERVER=192.168.1.11\sqlsadra
-            # DB_NAME=DBSadraafzar001
-            # USERNAME=AI
-            # PASSWORD=S@dra123
-
-# if you dont find .env file please make it via the below command in the directory:
-      - sudo touch .env
-      - copy and paste the below items for Abhar database:
-
-            SQL_DRIVER={ODBC Driver 17 for SQL Server}
-            DB_SERVER=192.168.50.113\sql2019
-            DB_NAME=DBAILog
-            USERNAME=sa
-            PASSWORD=S@draAfzar
-
-      - copy and paste it for sql local database:
-
-            SQL_DRIVER={ODBC Driver 17 for SQL Server}
-            DB_SERVER=192.168.50.113\sql2019
-            DB_NAME=DBAILog
-            USERNAME=sa
-            PASSWORD=S@draAfzar
